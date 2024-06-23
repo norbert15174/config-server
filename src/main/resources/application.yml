@@ -1,0 +1,36 @@
+spring:
+  cloud:
+    config:
+      allow-override: true
+      override-none: true
+      server:
+        vault:
+          host: vault-server
+          port: 8200
+          order: 1
+          kv-version: 2
+          authentication: TOKEN
+          token: ${VAULT_TOKEN}
+          scheme: http
+        git:
+          uri: https://github.com/norbert15174/config-files
+          skipSslValidation: true
+          username: ${GIT_LOGIN}
+          password: ${GIT_ACCESS_KEY}
+          search-paths:
+            - master-thesis
+          order: 2
+  application:
+    name: config-server
+  profiles:
+    active: vault, git
+
+server:
+  port: 8888
+
+eureka:
+  instance:
+    instance-id: config-server
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
